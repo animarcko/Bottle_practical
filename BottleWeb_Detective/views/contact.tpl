@@ -12,12 +12,13 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/">Детективное агентство «Тайна»</a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="/">Главная</a>
-                <a class="nav-link" href="/services">Услуги</a>
-                <a class="nav-link" href="/employees">Сотрудники</a>
-                <a class="nav-link" href="/about">О нас</a>
-                <a class="nav-link active" href="/contact">Контакты</a>
+            <div class="navbar-nav ms-auto">
+                    <a class="nav-link" href="/">Главная</a>
+                    <a class="nav-link" href="/services">Услуги</a>
+                    <a class="nav-link" href="/employees">Сотрудники</a>
+                    <a class="nav-link" href="/about">О нас</a>
+                    <a class="nav-link" href="/contact">Контакты</a>
+                    <a class="nav-link active" href="/new">📰 Новинки</a>  <!-- новая страница -->
             </div>
         </div>
     </nav>

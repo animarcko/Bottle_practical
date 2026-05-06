@@ -67,7 +67,13 @@ def team():
 @view('new')
 def novelties():
     """Renders the novelties page."""
+    methods = handlers.get_novelties_data()  # ← вызываем функцию из handlers
+    
     return dict(
         title='Актуальные новинки',
-        year=datetime.now().year
+        year=datetime.now().year,
+        methods=methods,
+        errors={},
+        form_data={},
+        success_message=None
     )

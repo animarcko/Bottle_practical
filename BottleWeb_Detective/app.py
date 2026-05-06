@@ -8,6 +8,7 @@ import sys
 
 # routes contains the HTTP handlers for our server and must be imported.
 import routes
+import handlers  # ← ДОБАВИТЬ: импорт обработчиков форм
 
 if '--debug' in sys.argv[1:] or 'SERVER_DEBUG' in os.environ:
     # Debug mode will enable more verbose output in the console window.
@@ -19,6 +20,14 @@ def wsgi_app():
     """Returns the application to make available through wfastcgi. This is used
     when the site is published to Microsoft Azure."""
     return bottle.default_app()
+
+
+# ДОБАВИТЬ: обработчик POST запросов из форм
+@bottle.route('/submit_request', method='POST')
+def submit_request():
+    """Handle form submission for investigation requests."""
+    return handlers.submit_request_handler()
+
 
 if __name__ == '__main__':
     PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
