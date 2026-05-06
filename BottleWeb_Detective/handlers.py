@@ -122,4 +122,4 @@ def submit_request_handler():
                    methods=methods,
                    errors={},
                    form_data={},
-                   success_message='✅ Заявка успешно отправлена! Наш детектив свяжется с вами в ближайшее время.')
+                   success_message='Заявка успешно отправлена! Наш детектив свяжется с вами в ближайшее время.')
