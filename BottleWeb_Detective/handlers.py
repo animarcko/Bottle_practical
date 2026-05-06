@@ -55,10 +55,55 @@ def save_request(request_data):
     print(f"✅ Заявка сохранена в {REQUESTS_FILE}")
 
 
+def validate_name(name):
+    """Validate name: only letters, spaces, hyphens, and Russian/English allowed."""
+    if not name or len(name.strip()) < 2:
+        return False, "Имя должно содержать минимум 2 символа"
+    
+    # Разрешаем: буквы (русские/английские), пробелы, дефисы, апострофы
+    import re
+    if not re.match(r'^[a-zA-Zа-яА-ЯёЁ\s\-\.\']+$', name.strip()):
+        return False, "Имя может содержать только буквы, пробелы и дефисы"
+    
+    return True, ""
+
+
+def validate_description(description):
+    """Validate description: not empty, min length, no malicious patterns."""
+    if not description:
+        return False, "Опишите вашу ситуацию"
+    
+    if len(description.strip()) < 10:
+        return False, "Пожалуйста, опишите ситуацию подробнее (минимум 10 символов)"
+    
+    if len(description.strip()) > 1000:
+        return False, "Описание не должно превышать 1000 символов"
+    
+    # Проверка на подозрительные HTML-теги или SQL инъекции (простая)
+    import re
+    suspicious = re.search(r'<[^>]*>|script|SELECT\s+|INSERT\s+|DELETE\s+|DROP\s+|--', description, re.IGNORECASE)
+    if suspicious:
+        return False, "Описание содержит недопустимые символы"
+    
+    return True, ""
+
+
 def validate_phone(phone):
     """Validate phone number (10-15 digits, allow +, spaces, dashes, brackets)."""
+    if not phone:
+        return False
+    
+    # Проверка на максимальную длину с учётом спецсимволов
+    if len(phone) > 30:
+        return False
+    
     cleaned = re.sub(r'[\s\(\)\-+]', '', phone)
-    return cleaned.isdigit() and 10 <= len(cleaned) <= 15
+    
+    # Проверка, что всё, кроме цифр, уже удалено и есть только цифры
+    if not cleaned.isdigit():
+        return False
+    
+    return 10 <= len(cleaned) <= 15
 
 
 def submit_request_handler():
@@ -78,24 +123,33 @@ def submit_request_handler():
         'description': description
     }
     
-    # Validation
+    # === ПРОВЕРКА ИМЕНИ ===
     if not name:
         errors['name'] = 'Пожалуйста, укажите ваше имя'
-    elif len(name) < 2:
-        errors['name'] = 'Имя должно содержать минимум 2 символа'
+    else:
+        is_valid, error_msg = validate_name(name)
+        if not is_valid:
+            errors['name'] = error_msg
     
+    # === ПРОВЕРКА ТЕЛЕФОНА ===
     if not phone:
         errors['phone'] = 'Телефон обязателен для связи'
     elif not validate_phone(phone):
         errors['phone'] = 'Неверный формат телефона (должно быть 10-15 цифр)'
     
+    # === ПРОВЕРКА МЕТОДА ===
     if not method:
         errors['method'] = 'Выберите интересующую вас новинку'
+    elif method == '-- Выберите метод --':
+        errors['method'] = 'Выберите интересующую вас новинку'
     
+    # === ПРОВЕРКА ОПИСАНИЯ ===
     if not description:
         errors['description'] = 'Опишите вашу ситуацию'
-    elif len(description) < 10:
-        errors['description'] = 'Пожалуйста, опишите ситуацию подробнее (минимум 10 символов)'
+    else:
+        is_valid, error_msg = validate_description(description)
+        if not is_valid:
+            errors['description'] = error_msg
     
     # Get methods data for template
     methods = get_novelties_data()
