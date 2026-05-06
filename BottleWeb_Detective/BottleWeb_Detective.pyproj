@@ -67,6 +67,9 @@
     <Content Include="views\about.tpl" />
     <Content Include="views\contact.tpl" />
     <Content Include="views\index.tpl" />
+    <Content Include="views\new.tpl">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="views\services.tpl">
       <SubType>Code</SubType>
     </Content>

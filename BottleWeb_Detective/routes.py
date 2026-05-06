@@ -62,3 +62,12 @@ def team():
         year=datetime.now().year
     )
 
+#страница актуальных новинок
+@route('/new')
+@view('new')
+def novelties():
+    """Renders the novelties page."""
+    return dict(
+        title='Актуальные новинки',
+        year=datetime.now().year
+    )
