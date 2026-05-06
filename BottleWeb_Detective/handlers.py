@@ -8,13 +8,9 @@ import os
 import re
 from datetime import datetime
 
-DATA_DIR = 'data'
-REQUESTS_FILE = os.path.join(DATA_DIR, 'requests.json')
-METHODS_FILE = os.path.join(DATA_DIR, 'methods.json')
-
-# Убедимся, что папка data существует
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR)
+# Файлы в корне проекта
+METHODS_FILE = 'methods.json'
+REQUESTS_FILE = 'requests.json'
 
 
 def get_novelties_data():
@@ -28,35 +24,51 @@ def get_novelties_data():
         return methods
 
 
+def save_request(request_data):
+    """Save investigation request to JSON file with UTF-8 encoding."""
+    requests = []
+    
+    # Если файл существует и не пустой
+    if os.path.exists(REQUESTS_FILE):
+        try:
+            # Проверяем, что файл не пустой
+            if os.path.getsize(REQUESTS_FILE) > 0:
+                with open(REQUESTS_FILE, 'r', encoding='utf-8') as f:
+                    requests = json.load(f)
+            else:
+                # Файл пустой, начинаем с пустого списка
+                requests = []
+        except json.JSONDecodeError:
+            # Если файл повреждён, начинаем заново
+            print("⚠️ Файл requests.json повреждён, создаём новый")
+            requests = []
+    
+    # Добавляем новую заявку
+    request_data['id'] = len(requests) + 1
+    request_data['created_at'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    requests.append(request_data)
+    
+    # Сохраняем с ensure_ascii=False для корректной записи русских букв
+    with open(REQUESTS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(requests, f, ensure_ascii=False, indent=2)
+    
+    print(f"✅ Заявка сохранена в {REQUESTS_FILE}")
+
+
 def validate_phone(phone):
     """Validate phone number (10-15 digits, allow +, spaces, dashes, brackets)."""
     cleaned = re.sub(r'[\s\(\)\-+]', '', phone)
     return cleaned.isdigit() and 10 <= len(cleaned) <= 15
 
 
-def save_request(request_data):
-    """Save investigation request to JSON file."""
-    requests = []
-    
-    if os.path.exists(REQUESTS_FILE):
-        with open(REQUESTS_FILE, 'r', encoding='utf-8') as f:
-            requests = json.load(f)
-    
-    request_data['id'] = len(requests) + 1
-    request_data['created_at'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    requests.append(request_data)
-    
-    with open(REQUESTS_FILE, 'w', encoding='utf-8') as f:
-        json.dump(requests, f, ensure_ascii=False, indent=2)
-
-
 def submit_request_handler():
     """Handle investigation request form submission."""
     
-    name = request.forms.get('name', '').strip()
-    phone = request.forms.get('phone', '').strip()
-    method = request.forms.get('method', '').strip()
-    description = request.forms.get('description', '').strip()
+    # Используем getunicode для правильной работы с русскими буквами
+    name = request.forms.getunicode('name', '').strip()
+    phone = request.forms.getunicode('phone', '').strip()
+    method = request.forms.getunicode('method', '').strip()
+    description = request.forms.getunicode('description', '').strip()
     
     errors = {}
     form_data = {
@@ -69,6 +81,8 @@ def submit_request_handler():
     # Validation
     if not name:
         errors['name'] = 'Пожалуйста, укажите ваше имя'
+    elif len(name) < 2:
+        errors['name'] = 'Имя должно содержать минимум 2 символа'
     
     if not phone:
         errors['phone'] = 'Телефон обязателен для связи'
@@ -86,9 +100,9 @@ def submit_request_handler():
     # Get methods data for template
     methods = get_novelties_data()
     
-    # If validation errors, return to form with errors
+    # If validation errors, return page with errors
     if errors:
-        return template('new',
+        return template('new', 
                        title='Актуальные новинки',
                        year=datetime.now().year,
                        methods=methods,
@@ -96,7 +110,7 @@ def submit_request_handler():
                        form_data=form_data,
                        success_message=None)
     
-    # Save the request
+    # Сохраняем заявку
     request_info = {
         'client_name': name,
         'phone': phone,
@@ -105,7 +119,7 @@ def submit_request_handler():
     }
     save_request(request_info)
     
-    # Success - return to form with success message
+    # Success - return page with success message
     return template('new',
                    title='Актуальные новинки',
                    year=datetime.now().year,

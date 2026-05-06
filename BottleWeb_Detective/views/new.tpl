@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<!-- Навигация (такая же как на всех страницах) -->
+<!-- Навигация -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="/">Детективное агентство «Тайна»</a>
@@ -65,12 +65,7 @@
         </div>
     </div>
 
-    <!-- Разделитель с изображением (как на главной) -->
-    <div class="container-fluid p-0 my-5">
-        <img src="/static/images/back4.png" alt="Детективное агентство" class="w-100 d-block" style="border-radius: 15px;">
-    </div>
-
-    <!-- Форма заявки (в стиле контактного блока с главной) -->
+    <!-- Форма заявки -->
     <div class="row mt-5 pt-4 mb-5">
         <div class="col-md-10 mx-auto">
             <div class="contact-info p-4 p-md-5 rounded-4 shadow-sm text-center bg-primary bg-opacity-10 border border-primary border-opacity-25">
@@ -147,7 +142,7 @@
     </div>
 </div>
 
-<!-- Футер (такой же как на всех страницах) -->
+<!-- Футер -->
 <footer class="footer py-4 mt-4">
     <div class="container text-center">
         <p class="mb-0 text-muted">© 2025 Детективное агентство «Тайна» — Ваша уверенность под защитой.</p>
