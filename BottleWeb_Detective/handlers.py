@@ -19,18 +19,8 @@ if not os.path.exists(DATA_DIR):
 
 def get_novelties_data():
     """Load novelties data from JSON file."""
-    default_methods = [
-        {"id": 1, "name": "🧬 Экспресс-ДНК анализ", "description": "Определение личности по биоматериалу за 24 часа", "date_added": "2025-04-01"},
-        {"id": 2, "name": "👁️ Нейросетевое распознавание лиц", "description": "Идентификация подозреваемых в толпе", "date_added": "2025-03-28"},
-        {"id": 3, "name": "🚁 Аэрофотосъёмка с дронов", "description": "Обследование местности с воздуха", "date_added": "2025-03-25"},
-        {"id": 4, "name": "🤖 ИИ-анализ финансовых документов", "description": "Выявление финансовых махинаций", "date_added": "2025-03-20"},
-        {"id": 5, "name": "💻 Цифровая криминалистика", "description": "Восстановление удалённых данных", "date_added": "2025-03-15"}
-    ]
-    
     if not os.path.exists(METHODS_FILE):
-        with open(METHODS_FILE, 'w', encoding='utf-8') as f:
-            json.dump(default_methods, f, ensure_ascii=False, indent=2)
-        return default_methods
+        return []
     
     with open(METHODS_FILE, 'r', encoding='utf-8') as f:
         methods = json.load(f)
@@ -122,4 +112,4 @@ def submit_request_handler():
                    methods=methods,
                    errors={},
                    form_data={},
-                   success_message='Заявка успешно отправлена! Наш детектив свяжется с вами в ближайшее время.')
+                   success_message='✅ Заявка успешно отправлена! Наш детектив свяжется с вами в ближайшее время.')
