@@ -18,7 +18,7 @@
                     <a class="nav-link" href="/employees">Сотрудники</a>
                     <a class="nav-link" href="/about">О нас</a>
                     <a class="nav-link" href="/contact">Контакты</a>
-                    <a class="nav-link active" href="/new">📰 Новинки</a>  <!-- новая страница -->
+                    <a class="nav-link active" href="/new">Новинки</a>  <!-- новая страница -->
             </div>
         </div>
     </nav>

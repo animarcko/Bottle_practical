@@ -8,128 +8,146 @@
 </head>
 <body>
 
-<!-- Навигация -->
+<!-- Навигация (такая же как на всех страницах) -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="/">Детективное агентство «Тайна»</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="/">Главная</a>
-                <a class="nav-link" href="/services">Услуги</a>
-                <a class="nav-link" href="/team">Сотрудники</a>
-                <a class="nav-link" href="/about">О нас</a>
-                <a class="nav-link" href="/contact">Контакты</a>
-                <a class="nav-link active" href="/new">📰 Новинки</a>
-            </div>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/">Главная</a>
+            <a class="nav-link" href="/services">Услуги</a>
+            <a class="nav-link" href="/employees">Сотрудники</a>
+            <a class="nav-link" href="/about">О нас</a>
+            <a class="nav-link" href="/contact">Контакты</a>
+            <a class="nav-link active" href="/new">Новинки</a>
         </div>
     </div>
 </nav>
 
-<!-- Основной контент -->
-<div class="container mt-4">
-    <!-- Hero секция -->
-    <div class="novelties-hero">
-        <h1>🕵️ Актуальные новинки</h1>
-        <p>Современные методы расследований — на страже вашей безопасности</p>
-    </div>
-
-    <!-- Список новинок -->
-    <div class="text-center mb-4">
-        <h2 class="novelties-section-title">Новые методики детективной работы</h2>
-    </div>
-    
-    <div class="row">
-        % for method in methods:
-        <div class="col-md-6 col-lg-4 mb-4">
-            <div class="novelty-card">
-                <div class="novelty-icon">
-                    {{method.get('icon', '🔍')}}
-                </div>
-                <div class="p-3">
-                    <h3 class="novelty-title">{{method['name']}}</h3>
-                    <div class="novelty-date">📅 Добавлено: {{method['date_added']}}</div>
-                    <p class="novelty-description">{{method['description']}}</p>
-                    <span class="badge bg-primary">✨ Новинка</span>
-                </div>
-            </div>
-        </div>
-        % end
-    </div>
-
-    <!-- Форма заявки -->
-    <div class="request-form-wrapper">
-        <h2 class="text-center mb-4">📋 Хотите начать дело?</h2>
-        <p class="text-center text-muted mb-4">Оставьте заявку, и наш детектив свяжется с вами в течение часа</p>
-        
-        % if success_message:
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{success_message}}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        % end
-        
-        <form method="post" action="/submit_request">
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="name" class="form-label">Ваше имя *</label>
-                    <input type="text" class="form-control" id="name" name="name" 
-                           value="{{form_data.get('name', '')}}"
-                           placeholder="Иван Петров">
-                    % if errors.get('name'):
-                    <div class="text-danger mt-1">{{errors['name']}}</div>
-                    % end
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="phone" class="form-label">Телефон *</label>
-                    <input type="tel" class="form-control" id="phone" name="phone" 
-                           placeholder="+7 (999) 123-45-67"
-                           value="{{form_data.get('phone', '')}}">
-                    <small class="text-muted">10-15 цифр, можно использовать +, -, пробелы, скобки</small>
-                    % if errors.get('phone'):
-                    <div class="text-danger mt-1">{{errors['phone']}}</div>
-                    % end
-                </div>
-            </div>
-            
-            <div class="mb-3">
-                <label for="method" class="form-label">Какая новинка вас заинтересовала? *</label>
-                <select class="form-control" id="method" name="method">
-                    <option value="">-- Выберите метод --</option>
-                    % for method in methods:
-                    <option value="{{method['name']}}" 
-                            {{'selected' if method['name'] == form_data.get('method', '') else ''}}>
-                        {{method['name']}}
-                    </option>
-                    % end
-                </select>
-                % if errors.get('method'):
-                <div class="text-danger mt-1">{{errors['method']}}</div>
-                % end
-            </div>
-            
-            <div class="mb-3">
-                <label for="description" class="form-label">Опишите вашу ситуацию *</label>
-                <textarea class="form-control" id="description" name="description" 
-                          rows="4" placeholder="Кратко изложите суть дела...">{{form_data.get('description', '')}}</textarea>
-                <small class="text-muted">Минимум 10 символов</small>
-                % if errors.get('description'):
-                <div class="text-danger mt-1">{{errors['description']}}</div>
-                % end
-            </div>
-            
-            <div class="text-center">
-                <button type="submit" class="btn btn-submit">
-                    🚀 Начать расследование
-                </button>
-            </div>
-        </form>
+<!-- Стартовый блок (Hero) в стиле сайта -->
+<div class="container-fluid hero-section bg-dark text-white py-5 mb-5">
+    <div class="container text-center">
+        <h1 class="display-4">Актуальные новинки</h1>
+        <p class="lead fs-3">
+            Современные методы расследований
+        </p>
+        <hr class="w-25 mx-auto my-3 bg-white opacity-50">
+        <p class="fs-5">На страже вашей безопасности — новые технологии и методики</p>
     </div>
 </div>
 
-<!-- Футер -->
+<div class="container">
+    <!-- Список новинок -->
+    <div class="mt-5 pt-3">
+        <h2 class="text-center mb-5">Новые методики детективной работы</h2>
+
+        <div class="row g-4">
+            % for method in methods:
+            <div class="col-md-6 col-lg-4">
+                <div class="card service-card h-100 shadow-sm border-0 rounded-4">
+                    <div class="card-body p-4">
+                        <div class="text-center mb-3" style="font-size: 48px;">
+                            {{method.get('icon', '🔍')}}
+                        </div>
+                        <h5 class="card-title fw-bold text-center">{{method['name']}}</h5>
+                        <div class="text-success text-center mb-2 small">
+                            📅 Добавлено: {{method['date_added']}}
+                        </div>
+                        <p class="card-text mt-3">
+                            {{method['description']}}
+                        </p>
+                        <div class="text-center mt-3">
+                            <span class="badge bg-primary">✨ Новинка</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            % end
+        </div>
+    </div>
+
+    <!-- Разделитель с изображением (как на главной) -->
+    <div class="container-fluid p-0 my-5">
+        <img src="/static/images/back4.png" alt="Детективное агентство" class="w-100 d-block" style="border-radius: 15px;">
+    </div>
+
+    <!-- Форма заявки (в стиле контактного блока с главной) -->
+    <div class="row mt-5 pt-4 mb-5">
+        <div class="col-md-10 mx-auto">
+            <div class="contact-info p-4 p-md-5 rounded-4 shadow-sm text-center bg-primary bg-opacity-10 border border-primary border-opacity-25">
+                <h3 class="mb-4">📋 Хотите начать дело?</h3>
+                <p class="mb-4">
+                    Оставьте заявку, и наш детектив свяжется с вами в течение часа
+                </p>
+                
+                % if success_message:
+                <div class="alert alert-success mb-4" role="alert">
+                    {{success_message}}
+                </div>
+                % end
+                
+                <form method="post" action="/submit_request" class="text-start">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label fw-bold">Ваше имя *</label>
+                            <input type="text" class="form-control" id="name" name="name" 
+                                   value="{{form_data.get('name', '')}}"
+                                   placeholder="Иван Петров">
+                            % if errors.get('name'):
+                            <div class="text-danger mt-1 small">{{errors['name']}}</div>
+                            % end
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="phone" class="form-label fw-bold">Телефон *</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" 
+                                   placeholder="+7 (921) 123-45-67"
+                                   value="{{form_data.get('phone', '')}}">
+                            <small class="text-muted">10-15 цифр, можно использовать +, -, пробелы, скобки</small>
+                            % if errors.get('phone'):
+                            <div class="text-danger mt-1 small">{{errors['phone']}}</div>
+                            % end
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="method" class="form-label fw-bold">Какая новинка вас заинтересовала? *</label>
+                        <select class="form-control" id="method" name="method">
+                            <option value="">-- Выберите метод --</option>
+                            % for method in methods:
+                            <option value="{{method['name']}}" 
+                                    {{'selected' if method['name'] == form_data.get('method', '') else ''}}>
+                                {{method['name']}}
+                            </option>
+                            % end
+                        </select>
+                        % if errors.get('method'):
+                        <div class="text-danger mt-1 small">{{errors['method']}}</div>
+                        % end
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="description" class="form-label fw-bold">Опишите вашу ситуацию *</label>
+                        <textarea class="form-control" id="description" name="description" 
+                                  rows="4" placeholder="Кратко изложите суть дела...">{{form_data.get('description', '')}}</textarea>
+                        <small class="text-muted">Минимум 10 символов</small>
+                        % if errors.get('description'):
+                        <div class="text-danger mt-1 small">{{errors['description']}}</div>
+                        % end
+                    </div>
+                    
+                    <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
+                        <button type="submit" class="btn btn-primary btn-hover-effect btn-lg px-5">
+                            🚀 Начать расследование
+                        </button>
+                    </div>
+                </form>
+                
+                <p class="mt-4 text-muted small">* Поля обязательные для заполнения</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Футер (такой же как на всех страницах) -->
 <footer class="footer py-4 mt-4">
     <div class="container text-center">
         <p class="mb-0 text-muted">© 2025 Детективное агентство «Тайна» — Ваша уверенность под защитой.</p>
